@@ -49,6 +49,14 @@ cd your-repository
 2. Run the corresponding script using Perl.
 3. Check the output file for results.
 
+The data used for testing these tools is from the **Escherichia coli O157:H7 str. Sakai** and **Escherichia coli CFT073** genomes. Below is a detailed description of the datasets:
+ 
+## Test Data
+- Protein sequences translated from the DNA of:
+ 1. *Escherichia coli O157:H7 str. Sakai* (Accession: [BA000007.2](https://www.ncbi.nlm.nih.gov/nuccore/BA000007.2/) | GI: 47118301).
+ 2. *Escherichia coli CFT073* (Accession: [AE014075.1](https://www.ncbi.nlm.nih.gov/nuccore/AE014075.1/) | GI: 26111730).
+- Protein sequences were combined into a single FASTA file (`Trans_Prot.txt`).
+
 ## Example Outputs
 - **Codon Analyzer**: A file showing the percentage of rare codons.
 - **GC Analyzer**: A file with GC content across windows, indicating genomic variations.
