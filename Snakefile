@@ -1,4 +1,4 @@
-# Snakefile
+
 
 configfile: "config.yaml"
 
@@ -72,5 +72,4 @@ rule plot:
         mkdir -p results
         cd results
         python ../{SCRIPTS_DIR}/plot_hydro.py hplot.txt
-        mv *.png hplot.png
         """

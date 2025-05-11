@@ -29,7 +29,7 @@ cd codonanalyzer
 ### Setup Environment 
 
 ```bash 
-conda install -c conda-forge -c bioconda snakemake-minimal matplotlib numpy=2.0
+conda install -c conda-forge -c bioconda snakemake matplotlib numpy=2.0
 ```  
 
 or using environment.yml: 
@@ -48,7 +48,7 @@ snakemake --cores 4
 
 ## Documentation
 
-See full documentation under [`/docs`](docs/) or view online with [MkDocs](https://www.mkdocs.org/):
+See the full documentation [here](https://bibymaths.github.io/codonanalyzer).
 
 ---
 
