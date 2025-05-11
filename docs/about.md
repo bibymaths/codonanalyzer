@@ -4,16 +4,6 @@
 
 The current version (2025) modernizes and integrates the original Perl tools using the Snakemake workflow system. It adds standardized outputs, a configuration-driven design, Python-based plotting, and support for reproducible research environments.
 
-### Historical Origins
-
-- The initial pipeline included:
-  - **CodonAnalyzer.pl** — for codon statistics and GC content
-  - **GC_Analyzer.pl** — for GC content profiling across sequence windows
-  - **H_Plot.pl** — for visualizing protein hydropathy using Kyte–Doolittle values
-- These tools were tested on the complete genomes of *Escherichia coli* strains:
-  - O157:H7 (Accession: BA000007.2)
-  - CFT073 (Accession: AE014075.1)
-
 ### Current Features
 
 - Reproducible, automated Snakemake workflow
@@ -22,3 +12,5 @@ The current version (2025) modernizes and integrates the original Perl tools usi
 - Full transition from monolithic Perl scripts to composable bioinformatics processes
 
 This evolution reflects the principles of modern scientific programming — reproducibility, modularity, and transparency — while honoring its academic roots.
+
+To view the original report submitted in 2015, please refer to the [original report](files/report.pdf).
