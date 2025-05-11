@@ -125,7 +125,7 @@ dependencies:
   - munkres=1.1.4=pyh9f0ad1d_0
   - nbformat=5.10.4=pyhd8ed1ab_1
   - ncurses=6.5=h2d0b736_3
-  - numpy=2.0.2=py312h58c1407_1
+  - numpy=1.26.4=py312heda63a1_0
   - openjpeg=2.5.3=h5fbd93e_0
   - openldap=2.6.9=he970967_0
   - openssl=3.5.0=h7b32b05_1
