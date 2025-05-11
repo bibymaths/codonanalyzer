@@ -1,0 +1,56 @@
+# Snakefile
+
+rule all:
+    input:
+        "results/metric.txt",
+        "results/orf",
+        "results/orf.fasta",
+        "results/translated.fasta",
+        "results/hplot.txt",
+        "results/hsummary.txt",
+        "results/hplot.png"    # ← now the actual plot file
+
+rule codon:
+    input:  "in.fasta"
+    output: "results/metric.txt"
+    shell:
+        "mkdir -p results && "
+        "perl codon.pl {input} > {output}"
+
+rule longorf:
+    input:  "in.fasta"
+    output:
+        summary="results/orf",
+        fasta="results/orf.fasta"
+    shell:
+        "mkdir -p results && "
+        "perl longORF.pl {input} results/orf"
+
+rule translate:
+    input:  "in.fasta"
+    output: "results/translated.fasta"
+    shell:
+        "mkdir -p results && "
+        "perl translate.pl {input} {output}"
+
+rule hydropathy:
+    input:
+        prot="results/translated.fasta"
+    output:
+        hplot="results/hplot.txt",
+        hsummary="results/hsummary.txt"
+    shell:
+        "mkdir -p results && "
+        "perl hydropathy.pl {input.prot} {output.hplot} {output.hsummary}"
+
+rule plot:
+    input:
+        "results/hplot.txt"
+    output:
+        "results/hplot.png"
+    shell:
+        """
+        mkdir -p results
+        cd results
+        python ../plot_hydro.py hplot.txt
+        """

@@ -1,0 +1,41 @@
+site_name: CodonAnalyzer
+site_description: 'Documentation for end-to-end processing of a genomic FASTA through codon analysis, ORF detection, translation to protein, hydropathy calculation, and plotting'
+site_author: 'Abhinav Mishra'
+site_url: https://bibymaths.github.io/codonanalyzer
+use_directory_urls: false
+repo_url: https://github.com/bibymaths/codonanalyzer
+
+theme:
+  name: readthedocs
+  language: en
+  features:
+    - navigation.tabs
+    - content.code.copy
+
+nav:
+  - Home: index.md
+  - Quickstart: quickstart.md
+  - Pipeline Overview:
+      - Workflow Diagram: workflow.md
+      - Process Details: processes.md
+  - Configuration:
+      - Parameters: parameters.md
+  - Results:
+      - Output Structure: outputs.md
+  - References: references.md
+  - About: about.md
+
+markdown_extensions:
+  - toc:
+      permalink: true
+  - admonition
+  - codehilite
+
+plugins:
+  - search
+
+watch:
+  - docs
+
+copyright: >
+  Copyright &copy; 2025 <a href="https://bibymaths.github.io">Abhinav Mishra</a>.
