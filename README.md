@@ -1,8 +1,4 @@
 # CodonAnalyzer
- 
-![GitHub last commit](https://img.shields.io/github/last-commit/bibymaths/codonanalyzer)
-
-A modular Snakemake workflow for analyzing codon usage, extracting ORFs, translating sequences to protein, and computing + plotting hydropathy profiles.
 
 Originally developed using Perl in 2015, this pipeline has been modernized in 2025 with reproducibility and modularity in mind.
 
@@ -41,7 +37,7 @@ conda env create -f environment.yml
 Then, run:
 
 ```bash
-snakemake --cores 4
+snakemake --cores 1
 ```
 
 ---

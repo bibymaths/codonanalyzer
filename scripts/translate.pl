@@ -62,4 +62,3 @@ while ( my $rec = <$IN> ) {
 
 close $IN;
 close $OUT;
-print "Translation complete — see '$outfile'\n";

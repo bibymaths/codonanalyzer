@@ -5,7 +5,7 @@ use POSIX qw(floor);
 
 # — INPUT/OUTPUT —
 my $in  = shift @ARGV or die "Usage: $0 <in.fasta> [out.txt]\n";
-my $out = shift @ARGV // 'metrics.txt';
+my $out = shift @ARGV or die "Usage: $0 <in.fasta> [out.txt]\n";
 
 open my $IN,  '<', $in  or die $!;
 open my $OUT, '>', $out or die $!;
@@ -235,5 +235,3 @@ print $OUT "  $_\n" for @win_gc;
 
 print $OUT "\n3-MER SHANNON ENTROPY: $H bits\n";
 close $OUT;
-
-print "All metrics written to '$out'\n";

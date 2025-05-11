@@ -124,5 +124,3 @@ while ( my $rec = <$IN> ) {
 close $IN;
 close $OUT;
 close $OFA;
-
-print "Done. Results in $out_table and $out_table.fasta\n";

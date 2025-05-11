@@ -12,10 +12,10 @@
 3. **Run the pipeline**  
    Execute the Snakemake command to start the pipeline:
    ```bash
-   snakemake --cores 4
+   snakemake --cores 1
    ``` 
    or 
    ```bash 
-   snakemake --cores 4 --config fasta=alt.fasta scripts_dir=myscripts
+   snakemake --cores 1 --config fasta=alt.fasta scripts_dir=myscripts
    ``` 
-   This will run the pipeline using 4 cores and the specified FASTA file and scripts directory. 
+   This will run the pipeline using 1 core and the specified FASTA file and scripts directory. 

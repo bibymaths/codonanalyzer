@@ -8,7 +8,7 @@ SCRIPTS_DIR = config.get("scripts_dir", ".")
 
 rule all:
     input:
-        "results/metric.txt",
+        "results/metrics.txt",
         "results/orf",
         "results/orf.fasta",
         "results/translated.fasta",
@@ -20,11 +20,11 @@ rule codon:
     input:
         fasta=FASTA
     output:
-        "results/metric.txt"
+        "results/metrics.txt"
     shell:
         """
         mkdir -p results
-        perl {SCRIPTS_DIR}/codon.pl {input.fasta} > {output}
+        perl {SCRIPTS_DIR}/codon.pl {input.fasta} {output}
         """
 
 rule longorf:
