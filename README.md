@@ -27,7 +27,7 @@ cd codonanalyzer
 ### Setup Environment 
 
 ```bash 
-conda install -c conda-forge -c bioconda snakemake matplotlib numpy=2.0
+conda install -c conda-forge -c bioconda snakemake matplotlib numpy=1.26.0
 ```  
 
 or using environment.yml: 
