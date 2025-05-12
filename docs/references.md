@@ -23,3 +23,5 @@ The development and interpretation of this pipeline were influenced by foundatio
 10. Moorhouse, M., et al. (2004). *Bioinformatics, Biocomputing and PERL*, Wiley & Sons.
 
 11. Dwyer, R.A. (2003). *Genomic Perl: From Bioinformatics Basics to Working Code*, Cambridge University Press.
+ 
+12. Mölder F, Jablonski KP, Letcher B et al. Sustainable data analysis with Snakemake [version 1; peer review: 1 approved, 1 approved with reservations]. F1000Research 2021, 10:33 (https://doi.org/10.12688/f1000research.29032.1)
