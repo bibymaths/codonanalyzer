@@ -52,10 +52,10 @@ See the full documentation [here](https://bibymaths.github.io/codonanalyzer).
 
 ---
 
-## Authors
+## Author
 
-* Abhinav Mishra (2025)
-* Namit Bhagwanani (original 2015 version)
+**Abhinav Mishra**  
+Email: [mishraabhinav@gmail.com](mailto:mishraabhinav@gmail.com)
 
 For full historical context, see [About](docs/about.md).
 
