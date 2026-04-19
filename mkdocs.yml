@@ -5,30 +5,30 @@ site_url: https://bibymaths.github.io/codonanalyzer
 repo_url: https://github.com/bibymaths/codonanalyzer
 repo_name: bibymaths/codonanalyzer
 
-copyright: Copyright © 2025 Abhinav Mishra
-
 theme:
   name: material
-  custom_dir: docs/overrides
+  language: en
+  font:
+    text: Ubuntu           # The font for standard paragraph text
+    code: Fira Code        # The font for code blocks
   palette:
+    # Palette toggle for light mode
     - media: "(prefers-color-scheme: light)"
       scheme: default
-      primary: teal
-      accent: cyan
+      primary: indigo # Change this to your brand color!
+      accent: deep purple
       toggle:
-        icon: material/weather-night
+        icon: material/brightness-7
         name: Switch to dark mode
+
+    # Palette toggle for dark mode
     - media: "(prefers-color-scheme: dark)"
       scheme: slate
-      primary: teal
-      accent: cyan
+      primary: black
+      accent: deep purple
       toggle:
-        icon: material/weather-sunny
+        icon: material/brightness-4
         name: Switch to light mode
-  features:
-    - navigation.tabs
-    - navigation.sections
-    - content.code.copy
 
 plugins:
   - search
@@ -79,3 +79,6 @@ nav:
   - Contributing: contributing.md
   - Changelog: changelog.md
   - Code of Conduct: code-of-conduct.md
+
+copyright: >
+  Copyright &copy; 2026 <a href="https://bibymaths.github.io">Abhinav Mishra</a>.

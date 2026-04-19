@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "codonanalyzer"
-version = "0.1.0"
+version = "1.0.2"
 description = "Nextflow DSL2 pipeline for codon usage analysis of DNA FASTA sequences"
 readme = "README.md"
 license = { file = "LICENSE" }

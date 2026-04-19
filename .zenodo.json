@@ -1,14 +1,14 @@
 {
   "title": "codonanalyzer",
   "description": "A Nextflow DSL2 pipeline for comprehensive codon usage analysis of DNA FASTA sequences. Computes nucleotide composition, codon counts, RSCU, ENc, amino-acid composition, ORF statistics, hydropathy profiles, and generates publication-quality plots.",
-  "version": "1.0.0",
   "license": "mit",
   "upload_type": "software",
   "access_right": "open",
   "creators": [
     {
       "name": "Mishra, Abhinav",
-      "affiliation": "Independent Researcher"
+      "affiliation": "Independent Researcher",
+      "orcid": "0009-0005-3179-7408"
     }
   ],
   "keywords": [
