@@ -6,14 +6,14 @@
 
 INPUT_FILE=$1
 OUTPUT_PREFIX=$2
-CORES=$(nproc)
+CORES=$(nproc)-4
 
 if [ -z "$OUTPUT_PREFIX" ]; then
     echo "Usage: $0 H_PLOT.txt output_prefix"
     exit 1
 fi
 
-WINDOW_SIZE=500
+WINDOW_SIZE=100
 echo "Processing with $CORES cores (Native Forking)..."
 
 # 1. Extract data
