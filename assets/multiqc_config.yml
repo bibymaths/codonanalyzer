@@ -1,0 +1,11 @@
+title: "codonanalyzer MultiQC"
+subtitle: "Consolidated metrics for codon, ORF, translation, and hydropathy outputs"
+intro_text: |
+  MultiQC configuration scaffold for codonanalyzer.
+  Extend this file when adding native MultiQC-compatible outputs.
+report_comment: "Author: Abhinav Mishra <mishraabhinav36@gmail.com>"
+custom_logo_title: "codonanalyzer"
+custom_data:
+  codonanalyzer:
+    section_name: "codonanalyzer summary"
+    description: "Summary placeholders for codonanalyzer output files"

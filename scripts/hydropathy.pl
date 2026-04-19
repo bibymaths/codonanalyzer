@@ -76,3 +76,59 @@ sub process {
     # write summary file
     print $S join("\t", $id, $n, $mean, $min, $max), "\n";
 }
+
+__END__
+
+=head1 NAME
+
+hydropathy.pl - Calculate residue-level hydropathy profiles from protein FASTA
+
+=head1 SYNOPSIS
+
+  perl hydropathy.pl <in.fasta> <H_PLOT.txt> <H_SUMMARY.txt>
+
+=head1 DESCRIPTION
+
+Calculates Kyte-Doolittle hydropathy values for residues in each FASTA record,
+producing a detailed per-sequence values file and a summary statistics table.
+
+=head1 OPTIONS
+
+=over 4
+
+=item B<< <in.fasta> >>
+
+Input protein FASTA file.
+
+=item B<< <H_PLOT.txt> >>
+
+Output file with per-residue hydropathy values.
+
+=item B<< <H_SUMMARY.txt> >>
+
+Output file with per-sequence summary statistics.
+
+=back
+
+=head1 INPUT/OUTPUT
+
+Input:
+
+- Single-record protein FASTA file.
+
+Output:
+
+- Hydropathy detail table.
+- Hydropathy summary table.
+
+=head1 AUTHOR
+
+Abhinav Mishra E<lt>mishraabhinav36@gmail.comE<gt>
+
+=head1 COPYRIGHT AND LICENSE
+
+Copyright (c) 2025 Abhinav Mishra.
+
+Distributed under the BSD 3-Clause License.
+
+=cut

@@ -62,3 +62,53 @@ while ( my $rec = <$IN> ) {
 
 close $IN;
 close $OUT;
+__END__
+
+=head1 NAME
+
+translate.pl - Translate DNA FASTA sequences to protein FASTA sequences
+
+=head1 SYNOPSIS
+
+  perl translate.pl <input.fasta> [output.fasta]
+
+=head1 DESCRIPTION
+
+Reads FASTA records, normalizes DNA sequence to uppercase A/C/G/T bases, applies
+standard codon translation, and emits translated protein FASTA records.
+
+=head1 OPTIONS
+
+=over 4
+
+=item B<< <input.fasta> >>
+
+Input DNA FASTA file.
+
+=item B<[output.fasta]>
+
+Optional output FASTA path. Defaults to C<translated.fasta>.
+
+=back
+
+=head1 INPUT/OUTPUT
+
+Input:
+
+- Single-record DNA FASTA file.
+
+Output:
+
+- Protein FASTA file.
+
+=head1 AUTHOR
+
+Abhinav Mishra E<lt>mishraabhinav36@gmail.comE<gt>
+
+=head1 COPYRIGHT AND LICENSE
+
+Copyright (c) 2025 Abhinav Mishra.
+
+Distributed under the BSD 3-Clause License.
+
+=cut

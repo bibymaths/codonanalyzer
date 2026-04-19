@@ -1,26 +1,72 @@
-# Process Details
+# Processes
 
-### 1. codon.pl
-Generates codon usage statistics and GC content.
-- **Input:** FASTA
-- **Output:** `results/metric.txt`
+## SPLIT_FASTA
 
-### 2. longORF.pl
-Detects the longest open reading frames.
-- **Input:** FASTA
-- **Output:** `results/orf`, `results/orf.fasta`
+!!! note
+    Input: `params.input` multi-FASTA.
 
-### 3. translate.pl
-Translates the genomic sequence to protein.
-- **Input:** FASTA
-- **Output:** `results/translated.fasta`
+```mermaid
+flowchart LR
+    A[params.input] --> B[SPLIT_FASTA]
+    B --> C[*.fa per record]
+```
 
-### 4. hydropathy.pl
-Calculates hydropathy values per amino acid.
-- **Input:** translated FASTA
-- **Output:** `hplot.txt`, `hsummary.txt`
+## CODON_ANALYSIS (`scripts/codon.pl`)
 
-### 5. plot_hydro.py
-Generates a histogram plot of hydropathy values.
-- **Input:** `hplot.txt`
-- **Output:** `hplot.png`
+!!! warning
+    This process computes many metrics, including codon-level and entropy statistics.
+
+```mermaid
+flowchart LR
+    A[record.fa] --> B[CODON_ANALYSIS]
+    B --> C[id.metrics.txt]
+```
+
+## LONG_ORF (`scripts/longORF.pl`)
+
+```mermaid
+flowchart LR
+    A[record.fa] --> B[LONG_ORF]
+    B --> C[id.orf]
+    B --> D[id.orf.fasta]
+```
+
+## TRANSLATE_FASTA (`scripts/translate.pl`)
+
+```mermaid
+flowchart LR
+    A[record.fa] --> B[TRANSLATE_FASTA]
+    B --> C[id.translated.fasta]
+```
+
+## HYDROPATHY_PROFILE (`scripts/hydropathy.pl`)
+
+```mermaid
+flowchart LR
+    A[id.translated.fasta] --> B[HYDROPATHY_PROFILE]
+    B --> C[id.hplot.txt]
+    B --> D[id.hsummary.txt]
+```
+
+## PLOT_HYDROPATHY (`scripts/plot_hydro.py`)
+
+```mermaid
+flowchart LR
+    A[id.hplot.txt] --> B[PLOT_HYDROPATHY]
+    B --> C[id.hplot.png]
+```
+
+## GATHER_RESULTS
+
+!!! danger
+    This is the terminal merge stage and rewrites combined outputs under `${params.outdir}/codonanalyzer_results/`.
+
+```mermaid
+flowchart LR
+    A[metrics/orf/translated/hplot/hsummary/png] --> B[GATHER_RESULTS]
+    B --> C[metrics.txt]
+    B --> D[orf + orf.fasta]
+    B --> E[translated.fasta]
+    B --> F[hplot.txt + hsummary.txt]
+    B --> G[hplot PNGs]
+```

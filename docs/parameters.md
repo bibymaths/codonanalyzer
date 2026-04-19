@@ -1,8 +1,18 @@
 # Parameters
 
-These are configured in `config.yaml`.
+!!! note
+    Parameter validation and help are driven by `nextflow_schema.json` using the `nf-schema` plugin in `main.nf` and `nextflow.config`.
 
-| Parameter    | Description                       | Example           |
-|--------------|-----------------------------------|-------------------|
-| `fasta`      | Path to the input FASTA file      | `data/in.fasta`   |
-| `scripts_dir`| Directory containing pipeline scripts | `scripts`     |
+!!! tip
+    Regenerate parameter documentation from schema whenever parameter definitions change.
+
+{% include-markdown "parameters.generated.md" %}
+
+## Parameter DAG context
+
+```mermaid
+flowchart LR
+    A[input] --> B[SPLIT_FASTA]
+    C[max_cpus/max_memory/max_time] --> D[Process resources]
+    E[outdir] --> F[publishDir targets]
+```

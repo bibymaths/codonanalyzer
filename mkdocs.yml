@@ -1,41 +1,81 @@
-site_name: CodonAnalyzer
-site_description: 'Documentation for end-to-end processing of a genomic FASTA through codon analysis, ORF detection, translation to protein, hydropathy calculation, and plotting'
-site_author: 'Abhinav Mishra'
+site_name: codonanalyzer
+site_description: Nextflow DSL2 codon analysis pipeline documentation
+site_author: Abhinav Mishra
 site_url: https://bibymaths.github.io/codonanalyzer
-use_directory_urls: false
 repo_url: https://github.com/bibymaths/codonanalyzer
+repo_name: bibymaths/codonanalyzer
+
+copyright: Copyright © 2025 Abhinav Mishra
 
 theme:
-  name: readthedocs
-  language: en
+  name: material
+  custom_dir: docs/overrides
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: teal
+      accent: cyan
+      toggle:
+        icon: material/weather-night
+        name: Switch to dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: teal
+      accent: cyan
+      toggle:
+        icon: material/weather-sunny
+        name: Switch to light mode
   features:
     - navigation.tabs
+    - navigation.sections
     - content.code.copy
-
-nav:
-  - Home: index.md
-  - Quickstart: quickstart.md
-  - Pipeline Overview:
-      - Workflow Diagram: workflow.md
-      - Process Details: processes.md
-  - Configuration:
-      - Parameters: parameters.md
-  - Results:
-      - Output Structure: outputs.md
-  - References: references.md
-  - About: about.md
-
-markdown_extensions:
-  - toc:
-      permalink: true
-  - admonition
-  - codehilite
 
 plugins:
   - search
+  - mkdocstrings
+  - autorefs
+  - glightbox
+  - minify
+  - git-revision-date-localized
+  - awesome-pages
+  - include-markdown
 
-watch:
-  - docs
+markdown_extensions:
+  - admonition
+  - attr_list
+  - md_in_html
+  - toc:
+      permalink: true
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.details
+  - pymdownx.highlight
 
-copyright: >
-  Copyright &copy; 2025 <a href="https://bibymaths.github.io">Abhinav Mishra</a>.
+extra_css:
+  - stylesheets/extra.css
+
+extra_javascript:
+  - https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js
+  - javascripts/extra.js
+
+nav:
+  - Home: index.md
+  - Installation: installation.md
+  - Usage: usage.md
+  - Pipeline Overview: pipeline-overview.md
+  - Processes: processes.md
+  - Parameters: parameters.md
+  - Output: output.md
+  - API Reference (Perl):
+      - codon.pl: api/codon.pl.md
+      - longORF.pl: api/longORF.pl.md
+      - translate.pl: api/translate.pl.md
+      - hydropathy.pl: api/hydropathy.pl.md
+  - Contributing: contributing.md
+  - Changelog: changelog.md
+  - Code of Conduct: code-of-conduct.md

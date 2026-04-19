@@ -235,3 +235,54 @@ print $OUT "  $_\n" for @win_gc;
 
 print $OUT "\n3-MER SHANNON ENTROPY: $H bits\n";
 close $OUT;
+__END__
+
+=head1 NAME
+
+codon.pl - Compute codon usage and sequence composition metrics from a DNA FASTA record
+
+=head1 SYNOPSIS
+
+  perl codon.pl <in.fasta> <out.txt>
+
+=head1 DESCRIPTION
+
+Reads a DNA FASTA input, normalizes sequence content to A/C/G/T, and reports
+nucleotide composition, codon counts, RSCU, ENc, amino-acid composition,
+ORF summary statistics, sliding-window GC%, and 3-mer Shannon entropy.
+
+=head1 OPTIONS
+
+=over 4
+
+=item B<< <in.fasta> >>
+
+Input FASTA file.
+
+=item B<< <out.txt> >>
+
+Output text file with metrics.
+
+=back
+
+=head1 INPUT/OUTPUT
+
+Input:
+
+- Single-record DNA FASTA file.
+
+Output:
+
+- Plain text metrics report.
+
+=head1 AUTHOR
+
+Abhinav Mishra E<lt>mishraabhinav36@gmail.comE<gt>
+
+=head1 COPYRIGHT AND LICENSE
+
+Copyright (c) 2025 Abhinav Mishra.
+
+Distributed under the BSD 3-Clause License.
+
+=cut
