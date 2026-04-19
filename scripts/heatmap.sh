@@ -1,90 +1,97 @@
 #!/bin/bash
 
 # ============================================================
-# Script: genome_heatmap_gnuplot.sh
-# Usage: ./genome_heatmap_gnuplot.sh H_PLOT.txt output_prefix
+# Script: ultra_fast_96core_heatmap.sh
 # ============================================================
 
 INPUT_FILE=$1
 OUTPUT_PREFIX=$2
+CORES=$(nproc)
 
 if [ -z "$OUTPUT_PREFIX" ]; then
     echo "Usage: $0 H_PLOT.txt output_prefix"
     exit 1
 fi
 
-# ADJUST WINDOW SIZE HERE:
-# 500-1000 is best for whole genomes
-WINDOW_SIZE=100
+WINDOW_SIZE=500
+echo "Processing with $CORES cores (Native Forking)..."
 
-echo "Using Window Size: $WINDOW_SIZE"
+# 1. Extract data
+IFS=$'\t' read -r ID SEQ HSTR < <(tail -n +2 "$INPUT_FILE")
+DATA_BIN="matrix_${ID}.bin"
 
-# Process records using a robust while loop
-# We skip the header and read the tab-separated values
-tail -n +2 "$INPUT_FILE" | while IFS=$'\t' read -r ID SEQ HSTR; do
-    echo "Processing record: $ID"
+# 2. Multi-threaded Binary Matrix Generator (Native Perl Fork)
+echo "$HSTR" | perl -e '
+    use strict;
+    my ($win, $cores) = @ARGV;
+    my $input = <STDIN>;
+    my @raw = split(/\s+/, $input);
+    my @binned;
 
-    DATA_TMP="tmp_matrix_${ID}.dat"
+    # Pre-binning
+    for (my $i=0; $i < @raw; $i += $win) {
+        my ($s, $c) = (0, 0);
+        for (my $j=$i; $j < $i+$win && $j < @raw; $j++) { $s += $raw[$j]; $c++; }
+        push @binned, $s/$c;
+    }
 
-    # Pre-processor: Now using STDIN to avoid "Argument list too long"
-    echo "$HSTR" | perl -e '
-        my $win = $ARGV[0];
-        # Read from STDIN
-        my $input = <STDIN>;
-        my @raw = split(/\s+/, $input);
-        my @binned;
+    my $N = scalar @binned;
+    my @pids;
 
-        # Binning logic
-        for (my $i=0; $i < @raw; $i += $win) {
-            my ($s, $c) = (0, 0);
-            for (my $j=$i; $j < $i+$win && $j < @raw; $j++) { $s += $raw[$j]; $c++; }
-            push @binned, $s/$c;
-        }
+    for (my $cpu = 0; $cpu < $cores; $cpu++) {
+        my $pid = fork();
+        if ($pid == 0) { # Child process
+            open my $FH, ">", "chunk_$cpu.tmp" or die $!;
+            binmode $FH;
+            my $start_j = int($N * $cpu / $cores);
+            my $end_j   = int($N * ($cpu + 1) / $cores) - 1;
 
-        my $N = scalar @binned;
-        # Print matrix for Gnuplot
-        for my $j (0..$N-1) {
-            for my $i (0..$N-1) {
-                printf "%.3f ", ($binned[$i] + $binned[$j])/2;
+            for my $j ($start_j .. $end_j) {
+                my $row = "";
+                for my $i (0 .. $N - 1) {
+                    $row .= pack("f", ($binned[$i] + $binned[$j]) / 2);
+                }
+                print $FH $row;
             }
-            print "\n";
+            close $FH;
+            exit(0);
+        } else {
+            push @pids, $pid;
         }
-    ' "$WINDOW_SIZE" > "$DATA_TMP"
+    }
+    # Wait for all 96 children
+    foreach my $pid (@pids) { waitpid($pid, 0); }
+' "$WINDOW_SIZE" "$CORES"
 
-    # Check if the matrix was actually created
-    if [ ! -s "$DATA_TMP" ]; then
-        echo "Error: Matrix generation failed for $ID"
-        continue
-    fi
+# 3. Concatenate and clean up
+cat chunk_*.tmp > "$DATA_BIN"
+rm chunk_*.tmp
 
-# Generate Gnuplot Script with Viridis Theme
-    gnuplot << EOF
-        set terminal pngcairo size 1200,1000 enhanced font 'Verdana,10'
-        set output '${OUTPUT_PREFIX}_${ID}.png'
+# Calculate N for gnuplot
+N=$(echo "$HSTR" | perl -e 'my $w=$ARGV[0]; my @r=split(/\s+/, <STDIN>); print int(scalar(@r)/$w)' "$WINDOW_SIZE")
 
-        # High-precision Viridis Palette definition
-        set palette defined ( \
-          0 "#440154", 1 "#482878", 2 "#3E4989", 3 "#31688E", \
-          4 "#26828E", 5 "#1F9E89", 6 "#35B779", 7 "#6DCD59", \
-          8 "#B4DE2C", 9 "#FDE725" )
+# 4. Gnuplot Binary Render
+gnuplot << EOF
+    set terminal pngcairo size 1500,1350 enhanced font 'Verdana,12'
+    set output '${OUTPUT_PREFIX}_${ID}.png'
 
-        set title "Genome Hydropathy Dot-Plot: ${ID}\n{/*0.8 Window Size: ${WINDOW_SIZE} residues (Viridis Theme)}"
-        set xlabel "Position X (bins of ${WINDOW_SIZE})"
-        set ylabel "Position Y (bins of ${WINDOW_SIZE})"
+    # Diverging Blue-White-Red Palette
+    # -4.5 (Hydrophilic): Royal Blue
+    #  0.0 (Neutral):     White
+    # +4.5 (Hydrophobic): Firebrick Red
+    set palette defined (-4.5 "#00008B", -2.25 "#6495ED", 0 "#FFFFFF", 2.25 "#FF6347", 4.5 "#B22222")
 
-        set tic scale 0
-        set view map
-        set size square
+    set title "Genome Hydropathy: ${ID}\n{/*0.8 Parallel Binary Render | Window: ${WINDOW_SIZE} | Cores: ${CORES}}"
+    set view map
+    set size square
 
-        # Hydropathy values range from -4.5 to 4.5
-        set cbrange [-4.5:4.5]
-        set cblabel "Avg Hydropathy (Dark: Hydrophilic | Yellow: Hydrophobic)"
+    # Ensure the color range is symmetric around zero
+    set cbrange [-4.5:4.5]
+    set cblabel "Avg Hydropathy (Blue: Hydrophilic | Red: Hydrophobic)"
 
-        splot '${DATA_TMP}' matrix with pm3d notitle
+    set autoscale fix
+    splot '${DATA_BIN}' binary array=${N}x${N} format='%f' with pm3d notitle
 EOF
 
-    rm "$DATA_TMP"
-    echo "Successfully saved: ${OUTPUT_PREFIX}_${ID}.png"
-done
-
-echo "Process Complete."
+rm "$DATA_BIN"
+echo "Success: ${OUTPUT_PREFIX}_${ID}.png"
