@@ -6,7 +6,7 @@
 !!! tip
     Regenerate parameter documentation from schema whenever parameter definitions change.
 
---8<-- "parameters.generated.md"
+{% include-markdown "parameters.generated.md" %}
 
 ## Parameter DAG context
 

@@ -8,13 +8,13 @@
     "input": {
       "type": "string",
       "format": "file-path",
-      "description": "Path to input DNA multi-FASTA file (up to 1000 headers).",
+      "description": "Path to input DNA multi-FASTA file (up to 1000 headers). Relative paths are resolved from the project root.",
       "default": "data/in.fasta"
     },
     "outdir": {
       "type": "string",
       "format": "directory-path",
-      "description": "Output directory for final and intermediate pipeline results.",
+      "description": "Output directory for final and intermediate pipeline results. Relative paths are resolved from the project root.",
       "default": "results"
     },
     "max_cpus": {

@@ -132,8 +132,9 @@ process GATHER_RESULTS {
 
     {
       for f in ${metrics_files}; do
-        echo "### $f"
-        cat "$f"
+        [ -f "\$f" ] || continue
+        echo "### \$f"
+        cat "\$f"
         echo
       done
     } > codonanalyzer_results/metrics.txt
@@ -142,25 +143,43 @@ process GATHER_RESULTS {
     cat ${orf_fastas} > codonanalyzer_results/orf.fasta
     cat ${translated_fastas} > codonanalyzer_results/translated.fasta
 
-    first_hplot=$(echo ${hplot_files} | awk '{print $1}')
-    head -n 1 "$first_hplot" > codonanalyzer_results/hplot.txt
-    for f in ${hplot_files}; do
-      tail -n +2 "$f" >> codonanalyzer_results/hplot.txt
+    hplot_list=(${hplot_files})
+    if [ \${#hplot_list[@]} -gt 0 ]; then
+      head -n 1 "\${hplot_list[0]}" > codonanalyzer_results/hplot.txt
+      for f in "\${hplot_list[@]}"; do
+        tail -n +2 "\$f" >> codonanalyzer_results/hplot.txt
+      done
+    else
+      printf 'Name\tSequence\tHydropathyValues\n' > codonanalyzer_results/hplot.txt
+    fi
+
+    hsummary_list=(${hsummary_files})
+    if [ \${#hsummary_list[@]} -gt 0 ]; then
+      head -n 1 "\${hsummary_list[0]}" > codonanalyzer_results/hsummary.txt
+      for f in "\${hsummary_list[@]}"; do
+        tail -n +2 "\$f" >> codonanalyzer_results/hsummary.txt
+      done
+    else
+      printf 'Name\tLength\tMeanHydropathy\tMinHydropathy\tMaxHydropathy\n' > codonanalyzer_results/hsummary.txt
+    fi
+
+    png_list=(${plot_pngs})
+    if [ \${#png_list[@]} -gt 0 ]; then
+      cp "\${png_list[@]}" codonanalyzer_results/
+    fi
+
+    for f in ${metrics_files} ${orf_tables} ${orf_fastas} ${translated_fastas} ${hplot_files} ${hsummary_files} ${plot_pngs}; do
+      [ -f "\$f" ] && cp "\$f" codonanalyzer_results/per_record/
     done
-
-    first_hsummary=$(echo ${hsummary_files} | awk '{print $1}')
-    head -n 1 "$first_hsummary" > codonanalyzer_results/hsummary.txt
-    for f in ${hsummary_files}; do
-      tail -n +2 "$f" >> codonanalyzer_results/hsummary.txt
-    done
-
-    cp ${plot_pngs} codonanalyzer_results/
-
-    cp ${metrics_files} ${orf_tables} ${orf_fastas} ${translated_fastas} ${hplot_files} ${hsummary_files} ${plot_pngs} codonanalyzer_results/per_record/
     """
 }
 
 workflow {
+    if (params.help) {
+        log.info paramsHelp()
+        exit 0
+    }
+
     validateParameters()
 
     input_channel = Channel.fromPath(params.input, checkIfExists: true)
@@ -177,16 +196,26 @@ workflow {
     plot_results = PLOT_HYDROPATHY(hydropathy_results.out.hplot)
 
     GATHER_RESULTS(
-        codon_results.out.metrics.map { id, file -> file }.collect(),
-        orf_results.out.tables.map { id, file -> file }.collect(),
-        orf_results.out.fastas.map { id, file -> file }.collect(),
-        translated_results.out.translated.map { id, file -> file }.collect(),
-        hydropathy_results.out.hplot.map { id, file -> file }.collect(),
-        hydropathy_results.out.hsummary.map { id, file -> file }.collect(),
-        plot_results.out.png.map { id, file -> file }.collect()
+        codon_results.out.metrics
+            .toSortedList { a, b -> a[0] <=> b[0] }
+            .map { entries -> entries.collect { id, file -> file } },
+        orf_results.out.tables
+            .toSortedList { a, b -> a[0] <=> b[0] }
+            .map { entries -> entries.collect { id, file -> file } },
+        orf_results.out.fastas
+            .toSortedList { a, b -> a[0] <=> b[0] }
+            .map { entries -> entries.collect { id, file -> file } },
+        translated_results.out.translated
+            .toSortedList { a, b -> a[0] <=> b[0] }
+            .map { entries -> entries.collect { id, file -> file } },
+        hydropathy_results.out.hplot
+            .toSortedList { a, b -> a[0] <=> b[0] }
+            .map { entries -> entries.collect { id, file -> file } },
+        hydropathy_results.out.hsummary
+            .toSortedList { a, b -> a[0] <=> b[0] }
+            .map { entries -> entries.collect { id, file -> file } },
+        plot_results.out.png
+            .toSortedList { a, b -> a[0] <=> b[0] }
+            .map { entries -> entries.collect { id, file -> file } }
     )
-
-    if (params.help) {
-        log.info paramsHelp()
-    }
 }

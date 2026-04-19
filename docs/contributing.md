@@ -11,6 +11,14 @@
 
 ## Local checks
 
+Install the docs dependencies first:
+
+```bash
+pip install -r docs/requirements.txt
+```
+
+Then validate the pipeline and docs:
+
 ```bash
 nextflow run main.nf -profile test
 mkdocs build
