@@ -17,11 +17,11 @@ plan tests => 4;
 ok(-f $script, "hydropathy.pl script exists");
 
 # 2. Script passes Perl syntax check
-my $syntax = system($^X, '-c', $script, '2>/dev/null');
+my $syntax = system("$^X -c \Q$script\E 2>/dev/null");
 is($syntax, 0, "hydropathy.pl passes syntax check (perl -c)");
 
 # 3. Script exits with error when called with no arguments
-my $no_args = system($^X, $script, '2>/dev/null');
+my $no_args = system("$^X \Q$script\E 2>/dev/null");
 isnt($no_args, 0, "hydropathy.pl exits non-zero with missing arguments");
 
 # 4. Script runs successfully on test fixture

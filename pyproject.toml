@@ -43,8 +43,8 @@ Documentation = "https://bibymaths.github.io/codonanalyzer"
 Repository = "https://github.com/bibymaths/codonanalyzer"
 Issues = "https://github.com/bibymaths/codonanalyzer/issues"
 
-[tool.hatch.build.targets.wheel]
-packages = ["scripts"]
+[tool.hatch.build]
+skip-excluded-packages = true
 
 [tool.ruff]
 line-length = 88

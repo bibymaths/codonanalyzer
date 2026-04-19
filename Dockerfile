@@ -17,8 +17,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         wget \
     && rm -rf /var/lib/apt/lists/*
 
-# Install Nextflow
-RUN curl -fsSL https://get.nextflow.io | bash \
+# Install Nextflow (pinned to NEXTFLOW_VERSION for reproducibility)
+RUN curl -fsSL https://get.nextflow.io | NXF_VER=${NEXTFLOW_VERSION} bash \
     && mv nextflow /usr/local/bin/nextflow \
     && chmod +x /usr/local/bin/nextflow
 

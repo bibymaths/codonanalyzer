@@ -20,6 +20,5 @@
 # No trailing whitespace
 --delete-trailing-whitespace
 
-# Output: overwrite in-place with .bak backup
---backup-and-modify-in-place
---backup-file-extension=bak
+# Output: overwrite in-place without creating backup files
+--nobackup-and-modify-in-place

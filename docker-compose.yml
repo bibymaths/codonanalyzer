@@ -9,5 +9,5 @@ services:
       - ./data:/pipeline/data
       - ./results:/pipeline/results
     environment:
-      - NXF_OPTS=${NXF_OPTS:--Xms512m -Xmx2g}
+      - "NXF_OPTS=${NXF_OPTS:--Xms512m -Xmx2g}"
       - NXF_WORK=${NXF_WORK:-/pipeline/work}

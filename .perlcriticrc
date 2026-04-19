@@ -3,7 +3,7 @@
 severity = 3
 theme    = core
 
-# Allow "use warnings" without explicit category
+# Allow "no warnings"
 [-TestingAndDebugging::ProhibitNoWarnings]
 
 # Allow postfix conditionals (common in bioinformatics scripts)

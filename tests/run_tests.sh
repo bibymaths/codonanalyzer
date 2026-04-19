@@ -10,18 +10,17 @@ echo "============================================="
 
 echo ""
 echo "--> Running unit tests (prove)..."
-prove -v tests/unit/*.t
-UNIT_RC=$?
+UNIT_RC=0
+prove -v tests/unit/*.t || UNIT_RC=$?
 
 echo ""
 echo "--> Running Nextflow integration test..."
+NF_RC=0
 if command -v nextflow &>/dev/null; then
-    nextflow run main.nf -profile test --outdir results_test
-    NF_RC=$?
+    nextflow run main.nf -profile test --outdir results_test || NF_RC=$?
     rm -rf results_test work .nextflow .nextflow.log* 2>/dev/null || true
 else
     echo "WARNING: nextflow not found in PATH — skipping integration test."
-    NF_RC=0
 fi
 
 echo ""
