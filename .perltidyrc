@@ -1,0 +1,25 @@
+# perltidy configuration for codonanalyzer
+# Indentation: 4 spaces (no tabs)
+--indent-columns=4
+--notabs
+
+# Line length
+--maximum-line-length=100
+
+# Brace style: opening brace on same line (K&R style)
+--opening-brace-on-new-line=0
+--cuddled-else
+
+# Vertical spacing
+--blank-lines-before-subs=1
+--blank-lines-before-packages=1
+
+# Comma-space
+--space-after-comma
+
+# No trailing whitespace
+--delete-trailing-whitespace
+
+# Output: overwrite in-place with .bak backup
+--backup-and-modify-in-place
+--backup-file-extension=bak

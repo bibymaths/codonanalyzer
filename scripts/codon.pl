@@ -1,6 +1,15 @@
 #!/usr/bin/env perl
 use strict;
 use warnings;
+use utf8;
+# ============================================================
+# Script: codon.pl
+# Author: Abhinav Mishra <mishraabhinav36@gmail.com>
+# Date:   2025
+# Copyright (c) 2025 Abhinav Mishra. All rights reserved.
+# License: MIT (see LICENSE file in repository root)
+# GCP: Perl5 (GNU Coding Practices for Perl5)
+# ============================================================
 use POSIX qw(floor);
 
 # — INPUT/OUTPUT —

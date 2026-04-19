@@ -1,0 +1,5 @@
+# CODEOWNERS
+# Each line maps a file pattern to the owner(s) responsible for review.
+# See: https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners
+
+* @bibymaths

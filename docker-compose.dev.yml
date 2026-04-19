@@ -1,0 +1,17 @@
+version: "3.8"
+
+services:
+  pipeline:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - .:/pipeline
+      - ./data:/pipeline/data
+      - ./results:/pipeline/results
+    environment:
+      - NXF_OPTS=${NXF_OPTS:--Xms512m -Xmx2g}
+      - NXF_WORK=${NXF_WORK:-/pipeline/work}
+    entrypoint: ["/bin/bash"]
+    stdin_open: true
+    tty: true

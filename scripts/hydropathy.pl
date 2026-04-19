@@ -1,6 +1,15 @@
 #!/usr/bin/env perl
 use strict;
 use warnings;
+use utf8;
+# ============================================================
+# Script: hydropathy.pl
+# Author: Abhinav Mishra <mishraabhinav36@gmail.com>
+# Date:   2025
+# Copyright (c) 2025 Abhinav Mishra. All rights reserved.
+# License: MIT (see LICENSE file in repository root)
+# GCP: Perl5 (GNU Coding Practices for Perl5)
+# ============================================================
 
 # FASTA in, two outputs
 my ($in_fasta, $plot_out, $sum_out) = @ARGV;

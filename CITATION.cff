@@ -1,0 +1,32 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it using the metadata below."
+type: software
+title: codonanalyzer
+version: 1.0.0
+date-released: "2025-01-01"
+abstract: >
+  codonanalyzer is a Nextflow DSL2 pipeline for comprehensive codon usage
+  analysis of DNA FASTA sequences. It computes nucleotide composition, codon
+  counts, RSCU, ENc, amino-acid composition, ORF statistics, hydropathy
+  profiles, and generates publication-quality plots.
+doi: 10.5281/zenodo.15384943
+license: MIT
+url: https://github.com/bibymaths/codonanalyzer
+repository-code: https://github.com/bibymaths/codonanalyzer
+keywords:
+  - bioinformatics
+  - nextflow
+  - fasta
+  - codon
+  - codon-usage
+  - RSCU
+  - ENc
+  - hydropathy
+  - perl
+  - python
+authors:
+  - family-names: Mishra
+    given-names: Abhinav
+    email: mishraabhinav36@gmail.com
+    orcid: ""
+    affiliation: Independent Researcher
