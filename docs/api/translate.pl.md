@@ -1,6 +1,6 @@
 # translate.pl
 
-# Author: Abhinav Mishra
+Author: Abhinav Mishra
 
 ## Name
 
