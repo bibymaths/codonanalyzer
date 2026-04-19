@@ -124,3 +124,59 @@ while ( my $rec = <$IN> ) {
 close $IN;
 close $OUT;
 close $OFA;
+__END__
+
+=head1 NAME
+
+longORF.pl - Detect longest open reading frames from a DNA FASTA record
+
+=head1 SYNOPSIS
+
+  perl longORF.pl <in.fasta> <out.table> [whole]
+
+=head1 DESCRIPTION
+
+Scans forward and reverse-complement strands for canonical ORFs, reports the
+longest ORF per strand/frame context, and writes both tabular and FASTA output.
+
+=head1 OPTIONS
+
+=over 4
+
+=item B<< <in.fasta> >>
+
+Input DNA FASTA file.
+
+=item B<< <out.table> >>
+
+Output ORF table file; FASTA output is written as C<< <out.table>.fasta >>.
+
+=item B<[whole]>
+
+Optional literal C<whole> to emit the full sequence rather than only ORF nt
+sequence in FASTA output.
+
+=back
+
+=head1 INPUT/OUTPUT
+
+Input:
+
+- Single-record DNA FASTA file.
+
+Output:
+
+- ORF summary table.
+- ORF FASTA file.
+
+=head1 AUTHOR
+
+Abhinav Mishra E<lt>mishraabhinav36@gmail.comE<gt>
+
+=head1 COPYRIGHT AND LICENSE
+
+Copyright (c) 2025 Abhinav Mishra.
+
+Distributed under the BSD 3-Clause License.
+
+=cut

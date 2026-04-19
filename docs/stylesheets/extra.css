@@ -1,0 +1,21 @@
+:root {
+  --md-primary-fg-color: #00796b;
+  --md-accent-fg-color: #00acc1;
+  --codon-badge-bg: #004d40;
+  --codon-badge-fg: #e0f7fa;
+}
+
+.md-typeset code {
+  border-radius: 0.3rem;
+  border: 1px solid rgba(0, 172, 193, 0.35);
+}
+
+.codon-badge {
+  display: inline-block;
+  padding: 0.15rem 0.5rem;
+  border-radius: 0.4rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  background: var(--codon-badge-bg);
+  color: var(--codon-badge-fg);
+}
