@@ -1,0 +1,39 @@
+# Version control
+.git
+.github
+
+# Large data / results directories
+data/
+results/
+work/
+.nextflow/
+.nextflow.log*
+
+# Documentation source (not needed in image)
+docs/
+
+# Logs and caches
+*.log
+__pycache__/
+*.pyc
+*.pyo
+.pytest_cache/
+
+# Test fixtures (large FASTA files)
+tests/fixtures/*.fasta
+
+# Python build artifacts
+*.egg-info/
+dist/
+build/
+.venv/
+venv/
+
+# Editor / OS artefacts
+.DS_Store
+*.swp
+*.swo
+Thumbs.db
+
+# Perltidy backups
+*.bak

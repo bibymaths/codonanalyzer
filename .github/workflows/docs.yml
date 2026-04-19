@@ -1,0 +1,90 @@
+name: Docs CI/CD
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'docs/**'
+      - 'mkdocs.yml'
+      - 'pyproject.toml'
+      - 'scripts/*.pl'
+      - '.github/workflows/docs.yml'
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  contents: write
+
+jobs:
+  lint-perl:
+    name: Lint Perl scripts
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Perl::Critic
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y --no-install-recommends libperl-critic-perl
+
+      - name: Run perlcritic
+        run: perlcritic --profile .perlcriticrc scripts/*.pl
+
+  test-perl:
+    name: Unit-test Perl scripts
+    runs-on: ubuntu-latest
+    needs: lint-perl
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Run unit tests with prove
+        run: prove -v tests/unit/*.t
+
+  build-docs:
+    name: Build MkDocs site
+    runs-on: ubuntu-latest
+    needs: test-perl
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install uv
+        run: pip install uv
+
+      - name: Install dependencies
+        run: uv pip install --system -e ".[docs,dev]"
+
+      - name: Build MkDocs (strict)
+        run: mkdocs build --strict
+
+  deploy-docs:
+    name: Deploy MkDocs to GitHub Pages
+    runs-on: ubuntu-latest
+    needs: build-docs
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install uv
+        run: pip install uv
+
+      - name: Install dependencies
+        run: uv pip install --system -e ".[docs,dev]"
+
+      - name: Deploy to GitHub Pages
+        run: mkdocs gh-deploy --force

@@ -1,0 +1,10 @@
+# Perl::Critic configuration for codonanalyzer
+# severity: 1 (brutal) to 5 (gentle); 3 = important issues only
+severity = 3
+theme    = core
+
+# Allow "no warnings"
+[-TestingAndDebugging::ProhibitNoWarnings]
+
+# Allow postfix conditionals (common in bioinformatics scripts)
+[-ControlStructures::ProhibitPostfixControls]

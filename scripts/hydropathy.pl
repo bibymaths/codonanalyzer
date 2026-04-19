@@ -1,16 +1,22 @@
 #!/usr/bin/env perl
 use strict;
 use warnings;
+use utf8;
+# ============================================================
+# Script: hydropathy.pl
+# Author: Abhinav Mishra <mishraabhinav36@gmail.com>
+# Date:   2025
+# Copyright (c) 2025 Abhinav Mishra. All rights reserved.
+# License: MIT (see LICENSE file in repository root)
+# GCP: Perl5 (GNU Coding Practices for Perl5)
+# ============================================================
+use Carp;
 
 # FASTA in, two outputs
 my ($in_fasta, $plot_out, $sum_out) = @ARGV;
-die "Usage: $0 in.fasta H_PLOT.txt H_SUMMARY.txt\n" unless $sum_out;
+croak "Usage: $0 in.fasta H_PLOT.txt H_SUMMARY.txt\n" unless $sum_out;
 
-open my $IN,  '<', $in_fasta or die $!;
-open my $P,   '>', $plot_out  or die $!;
-open my $S,   '>', $sum_out   or die $!;
-
-# Kyte–Doolittle hydropathy (numeric)
+# Kyte-Doolittle hydropathy (numeric)
 my %scale = (
   A=> 1.8,  R=>-4.5, N=>-3.5, D=>-3.5, C=> 2.5,
   Q=>-3.5,  E=>-3.5, G=>-0.4, H=>-3.2, I=> 4.5,
@@ -24,29 +30,7 @@ my %scale = (
   U=> 2.5,   # treat selenocysteine like C
 );
 
-# write headers
-print $P join("\t", qw(Name Sequence HydropathyValues)), "\n";
-print $S join("\t", qw(Name Length MeanHydropathy MinHydropathy MaxHydropathy)), "\n";
-
-# parse FASTA
-my ($name, $seq);
-while (<$IN>) {
-    chomp;
-    if (/^>(\S+)/) {
-        process($name,$seq) if defined $name;
-        ($name, $seq) = ($1, '');
-    }
-    else {
-        s/\s+//g;
-        $seq .= uc $_;
-    }
-}
-process($name,$seq) if defined $name;
-
-close $_ for ($IN,$P,$S);
-print "Done: details in $plot_out; summary in $sum_out\n";
-
-#— sub to compute & write one record —#
+#- sub to compute one record's hydropathy values -#
 sub process {
     my ($id, $s) = @_;
     return unless defined $id and length $s;
@@ -66,16 +50,70 @@ sub process {
     $min = $_ < $min ? $_ : $min for @h;
     $max = $_ > $max ? $_ : $max for @h;
 
-    # write plot file
-    print $P join("\t",
+    my $plot_line = join("\t",
         $id,
         $s,
         join(' ', map { sprintf("%.1f",$_) } @h),
-    ), "\n";
+    ) . "\n";
 
-    # write summary file
-    print $S join("\t", $id, $n, $mean, $min, $max), "\n";
+    my $sum_line = join("\t", $id, $n, $mean, $min, $max) . "\n";
+
+    return ($plot_line, $sum_line);
 }
+
+# Slurp FASTA file into records
+my @fasta_recs;
+{
+    open my $IN, '<', $in_fasta or croak $!;
+    local $/ = undef;    # slurp entire file at once
+    my $content = <$IN>;
+    close $IN;
+    @fasta_recs = split / \n (?=>) /x, $content;    # split on record boundaries
+}
+
+# Parse FASTA and compute hydropathy
+my (@plot_lines, @sum_lines);
+my ($name, $seq);
+for my $rec (@fasta_recs) {
+    my @lines = split / \n /x, $rec;    # split record into lines
+    for my $line (@lines) {
+        if ( $line =~ / ^ > (\S+) /x ) {    # FASTA header
+            if ( defined $name ) {
+                my ($pl, $sl) = process($name, $seq);
+                push @plot_lines, $pl if defined $pl;
+                push @sum_lines,  $sl if defined $sl;
+            }
+            ($name, $seq) = ($1, '');
+        }
+        else {
+            $line =~ s/ \s+ //gx;    # strip whitespace
+            $seq .= uc $line;
+        }
+    }
+}
+if ( defined $name ) {
+    my ($pl, $sl) = process($name, $seq);
+    push @plot_lines, $pl if defined $pl;
+    push @sum_lines,  $sl if defined $sl;
+}
+
+# Write plot file
+{
+    open my $P, '>', $plot_out or croak $!;
+    print $P join("\t", qw(Name Sequence HydropathyValues)), "\n";
+    print $P $_ for @plot_lines;
+    close $P;
+}
+
+# Write summary file
+{
+    open my $S, '>', $sum_out or croak $!;
+    print $S join("\t", qw(Name Length MeanHydropathy MinHydropathy MaxHydropathy)), "\n";
+    print $S $_ for @sum_lines;
+    close $S;
+}
+
+print "Done: details in $plot_out; summary in $sum_out\n";
 
 __END__
 

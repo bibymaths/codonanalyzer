@@ -1,0 +1,62 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "codonanalyzer"
+version = "0.1.0"
+description = "Nextflow DSL2 pipeline for codon usage analysis of DNA FASTA sequences"
+readme = "README.md"
+license = { file = "LICENSE" }
+authors = [
+    { name = "Abhinav Mishra", email = "mishraabhinav36@gmail.com" }
+]
+requires-python = ">=3.11"
+keywords = ["bioinformatics", "nextflow", "fasta", "codon", "codon-usage"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
+    "Topic :: Scientific/Engineering :: Bio-Informatics",
+]
+# No Python runtime dependencies; this project is Perl/Nextflow.
+# The dependency-groups below cover docs/dev tooling only.
+dependencies = []
+
+[project.optional-dependencies]
+docs = [
+    "mkdocs-material>=9.5",
+    "pymdown-extensions>=10.7",
+    "mkdocstrings[python]>=0.25",
+    "mkdocs-autorefs>=1.0",
+    "mkdocs-glightbox>=0.4",
+    "mkdocs-minify-plugin>=0.8",
+    "mkdocs-git-revision-date-localized-plugin>=1.2",
+    "mkdocs-awesome-pages-plugin>=2.9",
+    "mkdocs-include-markdown-plugin>=6.0",
+]
+dev = [
+    "ruff>=0.4",
+]
+
+[project.urls]
+Homepage = "https://github.com/bibymaths/codonanalyzer"
+Documentation = "https://bibymaths.github.io/codonanalyzer"
+Repository = "https://github.com/bibymaths/codonanalyzer"
+Issues = "https://github.com/bibymaths/codonanalyzer/issues"
+
+# This project has no Python source to ship as a wheel.
+# Hatchling is used only as a PEP 517 build backend for tooling metadata.
+[tool.hatch.build.targets.wheel]
+packages = ["src/codonanalyzer"]
+
+[tool.hatch.build.targets.sdist]
+include = []           # no source distribution either
+
+[tool.ruff]
+line-length = 88
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "N", "UP", "B"]

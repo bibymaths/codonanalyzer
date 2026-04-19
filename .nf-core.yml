@@ -1,0 +1,26 @@
+nf_core_version: "2.14.1"
+repository_type: pipeline
+template:
+  name: codonanalyzer
+  description: "Nextflow DSL2 pipeline for codon usage analysis of DNA FASTA sequences"
+  author: "Abhinav Mishra"
+  org: bibymaths
+  version: "1.0.0"
+lint:
+  files_unchanged:
+    - LICENSE
+    - assets/multiqc_config.yml
+  files_exist:
+    - CHANGELOG.md
+    - CITATION.cff
+    - CITATIONS.md
+    - CODE_OF_CONDUCT.md
+    - CONTRIBUTING.md
+    - README.md
+  nextflow_config:
+    - manifest.name
+    - manifest.author
+    - manifest.description
+    - manifest.version
+    - manifest.nextflowVersion
+  actions_schema_validation: false

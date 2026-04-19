@@ -1,6 +1,15 @@
 #!/usr/bin/env perl
 use strict;
 use warnings;
+use utf8;
+# ============================================================
+# Script: translate.pl
+# Author: Abhinav Mishra <mishraabhinav36@gmail.com>
+# Date:   2025
+# Copyright (c) 2025 Abhinav Mishra. All rights reserved.
+# License: MIT (see LICENSE file in repository root)
+# GCP: Perl5 (GNU Coding Practices for Perl5)
+# ============================================================
 
 # -------------------------------------------------------------------
 # Usage: translate_fasta.pl input.fasta [output.fasta]
@@ -10,7 +19,7 @@ my ($infile, $outfile) = @ARGV;
 die "Usage: $0 input.fasta [output.fasta]\n" unless $infile;
 $outfile ||= 'translated.fasta';
 
-# codon→AA lookup (64 codons, stops map to '*')
+# codon->AA lookup (64 codons, stops map to '*')
 my %TRANSLATION = (
   # Phe, Leu, Ile, Met, Val, Ser, Pro, Thr, Ala, Tyr, His, Gln,
   TTT=>'F', TTC=>'F', TTA=>'L', TTG=>'L', CTT=>'L', CTC=>'L', CTA=>'L', CTG=>'L',
@@ -31,37 +40,45 @@ my %TRANSLATION = (
   TAA=>'', TAG=>'', TGA=>'',
 );
 
-open my $IN,  '<', $infile
-  or die "Cannot open input '$infile': $!\n";
-open my $OUT, '>', $outfile
-  or die "Cannot write output '$outfile': $!\n";
+# Slurp entire file, split into FASTA records
+my @raw_recs;
+{
+    open my $IN, '<', $infile or die "Cannot open input '$infile': $!\n";
+    local $/ = undef;    # slurp entire file at once
+    my $content = <$IN>;
+    close $IN;
+    @raw_recs = split / \n (?=>) /x, $content;    # split on record boundaries
+}
 
-# Read one FASTA record at a time
-local $/ = "\n>";
-while ( my $rec = <$IN> ) {
-    chomp $rec;
-    $rec =~ s/^>//;                      # remove leading '>'
-    my ($header, @lines) = split /\n/, $rec;
-    my $id = (split /\s+/, $header)[0];  # take first word as seq ID
+# Translate each record
+my @records;
+for my $rec (@raw_recs) {
+    $rec =~ s/ ^ > //x;                          # remove leading '>'
+    my ($header, @lines) = split / \n /x, $rec;
+    my $id = ( split / \s+ /x, $header )[0];     # take first word as seq ID
 
     # join sequence lines, strip whitespace & ambiguity
-    my $seq = join('', @lines);
-    $seq =~ s/\s+//g;     # remove all whitespace
-    $seq = uc $seq;       # uppercase
-    $seq =~ s/[^ACGT]//g; # drop any non-ACGT letters
+    my $seq = join( '', @lines );
+    $seq =~ s/ \s+ //gx;      # remove all whitespace
+    $seq = uc $seq;            # uppercase
+    $seq =~ s/ [^ACGT] //gx;  # drop any non-ACGT letters
 
     # split into codons (C-level) and translate
-    my @codons = unpack("(A3)*", $seq);
+    my @codons = unpack( "(A3)*", $seq );
     my $protein = join '', map {
         $TRANSLATION{$_} // 'X'   # 'X' for any unexpected codon
     } @codons;
 
-    # write protein FASTA
-    print $OUT ">$id\n$protein\n";
+    push @records, [ $id, $protein ];
 }
 
-close $IN;
-close $OUT;
+# Write protein FASTA records
+{
+    open my $OUT, '>', $outfile or die "Cannot write output '$outfile': $!\n";
+    print $OUT ">$_->[0]\n$_->[1]\n" for @records;
+    close $OUT;
+}
+
 __END__
 
 =head1 NAME
