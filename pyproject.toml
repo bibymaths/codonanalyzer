@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "codonanalyzer"
-version = "1.0.0"
+version = "0.1.0"
 description = "Nextflow DSL2 pipeline for codon usage analysis of DNA FASTA sequences"
 readme = "README.md"
 license = { file = "LICENSE" }
@@ -21,7 +21,12 @@ classifiers = [
     "Programming Language :: Python :: 3.11",
     "Topic :: Scientific/Engineering :: Bio-Informatics",
 ]
-dependencies = [
+# No Python runtime dependencies; this project is Perl/Nextflow.
+# The dependency-groups below cover docs/dev tooling only.
+dependencies = []
+
+[project.optional-dependencies]
+docs = [
     "mkdocs-material>=9.5",
     "mkdocstrings[python]>=0.25",
     "mkdocs-autorefs>=1.0",
@@ -31,8 +36,6 @@ dependencies = [
     "mkdocs-awesome-pages-plugin>=2.9",
     "mkdocs-include-markdown-plugin>=6.0",
 ]
-
-[project.optional-dependencies]
 dev = [
     "ruff>=0.4",
 ]
@@ -43,8 +46,13 @@ Documentation = "https://bibymaths.github.io/codonanalyzer"
 Repository = "https://github.com/bibymaths/codonanalyzer"
 Issues = "https://github.com/bibymaths/codonanalyzer/issues"
 
-[tool.hatch.build]
-skip-excluded-packages = true
+# This project has no Python source to ship as a wheel.
+# Hatchling is used only as a PEP 517 build backend for tooling metadata.
+[tool.hatch.build.targets.wheel]
+packages = ["src/codonanalyzer"]
+
+[tool.hatch.build.targets.sdist]
+include = []           # no source distribution either
 
 [tool.ruff]
 line-length = 88
