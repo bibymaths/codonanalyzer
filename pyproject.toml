@@ -23,7 +23,10 @@ classifiers = [
 ]
 # No Python runtime dependencies; this project is Perl/Nextflow.
 # The dependency-groups below cover docs/dev tooling only.
-dependencies = []
+dependencies = [
+    "matplotlib>=3.10.8",
+    "numpy>=2.4.4",
+]
 
 [project.optional-dependencies]
 docs = [
