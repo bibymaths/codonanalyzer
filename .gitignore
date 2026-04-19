@@ -1,2 +1,61 @@
-.snakemake/
+# Nextflow runtime files
+work/
+.nextflow/
+.nextflow.log*
+.nextflow.history
+.nextflow.cache
+.nextflow.pid
+
+# Execution reports / traces
+*.trace
+*.timeline.html
+*.report.html
+*.dag.html
+
+# Logs
+*.log
+
+# Temporary / intermediate outputs
+tmp/
+temp/
+*.tmp
+
+# Output directories (customize if needed)
 results/
+output/
+out/
+
+# Conda / environments
+.conda/
+.env/
+.envrc
+.env.*
+
+# Docker / Singularity caches
+singularity/
+.singularity/
+docker/
+.docker/
+
+# Python artifacts (if using scripts)
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# R artifacts (if applicable)
+.Rhistory
+.RData
+.Rproj.user/
+
+# Jupyter (if used)
+.ipynb_checkpoints/
+
+# System files
+.DS_Store
+Thumbs.db
+
+# IDE/editor
+.vscode/
+.idea/
+*.swp

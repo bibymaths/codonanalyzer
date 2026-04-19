@@ -15,19 +15,19 @@
 === "Local"
 
     ```bash
-    nextflow run main.nf -profile standard --input data/in.fasta --outdir results
+    nextflow run main.nf -profile standard --input data/input.fasta --outdir results
     ```
 
 === "Conda"
 
     ```bash
-    nextflow run main.nf -profile conda --input data/in.fasta --outdir results
+    nextflow run main.nf -profile conda --input data/input.fasta --outdir results
     ```
 
 === "SLURM"
 
     ```bash
-    nextflow run main.nf -profile hpc --input data/in.fasta --outdir results
+    nextflow run main.nf -profile hpc --input data/input.fasta --outdir results
     ```
 
 !!! danger

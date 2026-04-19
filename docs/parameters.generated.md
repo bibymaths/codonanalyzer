@@ -1,6 +1,6 @@
 | Parameter | Type | Default | Description |
 |---|---|---|---|
-| `input` | string | `data/in.fasta` | Path to input DNA multi-FASTA file (up to 1000 headers). |
+| `input` | string | `data/input.fasta` | Path to input DNA multi-FASTA file (up to 1000 headers). |
 | `outdir` | string | `results` | Output directory for final and intermediate pipeline results. |
 | `max_cpus` | integer | `96` | Maximum CPUs available to the pipeline executor. |
 | `max_memory` | string | `1000.GB` | Maximum memory available to pipeline processes. |

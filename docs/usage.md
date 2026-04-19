@@ -8,7 +8,7 @@
 ```bash
 nextflow run main.nf \
   -profile standard \
-  --input data/in.fasta \
+  --input data/input.fasta \
   --outdir results
 ```
 

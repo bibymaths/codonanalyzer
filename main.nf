@@ -18,7 +18,7 @@ process SPLIT_FASTA {
       BEGIN { n=0 }
       /^>/ {
         n++
-        h = substr($0,2)
+        h = substr(\$0,2)
         gsub(/[^A-Za-z0-9_.-]/, "_", h)
         out = sprintf("%04d_%s.fa", n, h)
       }
@@ -176,7 +176,7 @@ process GATHER_RESULTS {
 
 workflow {
     if (params.help) {
-        log.info paramsHelp()
+        log.info paramsHelp("nextflow run main.nf --input data/input.fasta --outdir results")
         exit 0
     }
 
@@ -184,37 +184,42 @@ workflow {
 
     input_channel = Channel.fromPath(params.input, checkIfExists: true)
 
-    split_records = SPLIT_FASTA(input_channel)
-        .out
-        .records
+    SPLIT_FASTA(input_channel)
+
+    split_records = SPLIT_FASTA.out.records
+        .flatten()
         .map { fasta -> tuple(fasta.baseName, fasta) }
 
-    codon_results = CODON_ANALYSIS(split_records)
-    orf_results = LONG_ORF(split_records)
-    translated_results = TRANSLATE_FASTA(split_records)
-    hydropathy_results = HYDROPATHY_PROFILE(translated_results.out.translated)
-    plot_results = PLOT_HYDROPATHY(hydropathy_results.out.hplot)
+    CODON_ANALYSIS(split_records)
+
+    LONG_ORF(split_records)
+
+    TRANSLATE_FASTA(split_records)
+
+    HYDROPATHY_PROFILE(TRANSLATE_FASTA.out.translated)
+
+    PLOT_HYDROPATHY(HYDROPATHY_PROFILE.out.hplot)
 
     GATHER_RESULTS(
-        codon_results.out.metrics
+        CODON_ANALYSIS.out.metrics
             .toSortedList { a, b -> a[0] <=> b[0] }
             .map { entries -> entries.collect { id, file -> file } },
-        orf_results.out.tables
+        LONG_ORF.out.tables
             .toSortedList { a, b -> a[0] <=> b[0] }
             .map { entries -> entries.collect { id, file -> file } },
-        orf_results.out.fastas
+        LONG_ORF.out.fastas
             .toSortedList { a, b -> a[0] <=> b[0] }
             .map { entries -> entries.collect { id, file -> file } },
-        translated_results.out.translated
+        TRANSLATE_FASTA.out.translated
             .toSortedList { a, b -> a[0] <=> b[0] }
             .map { entries -> entries.collect { id, file -> file } },
-        hydropathy_results.out.hplot
+        HYDROPATHY_PROFILE.out.hplot
             .toSortedList { a, b -> a[0] <=> b[0] }
             .map { entries -> entries.collect { id, file -> file } },
-        hydropathy_results.out.hsummary
+        HYDROPATHY_PROFILE.out.hsummary
             .toSortedList { a, b -> a[0] <=> b[0] }
             .map { entries -> entries.collect { id, file -> file } },
-        plot_results.out.png
+        PLOT_HYDROPATHY.out.png
             .toSortedList { a, b -> a[0] <=> b[0] }
             .map { entries -> entries.collect { id, file -> file } }
     )

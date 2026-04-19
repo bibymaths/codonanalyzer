@@ -1,12 +1,12 @@
 # Quickstart
 
 1. **Prepare your FASTA file**  
-   Place your input file (e.g. `in.fasta`) in a `data` directory.
+   Place your input file (e.g. `input.fasta`) in a `data` directory.
 
 2. **Configure the pipeline**  
    Edit `config.yaml`:
    ```yaml
-   fasta: path/to/in.fasta
+   fasta: path/to/input.fasta
    scripts_dir: scripts
  
 3. **Run the pipeline**  
