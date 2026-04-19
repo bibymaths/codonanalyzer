@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # ============================================================
-# Script: ultra_fast_96core_heatmap.sh
+# Script: heatmap.sh
 # ============================================================
 
 INPUT_FILE=$1
@@ -81,7 +81,7 @@ gnuplot << EOF
     # +4.5 (Hydrophobic): Firebrick Red
     set palette defined (-4.5 "#00008B", -2.25 "#6495ED", 0 "#FFFFFF", 2.25 "#FF6347", 4.5 "#B22222")
 
-    set title "Genome Hydropathy: ${ID}\n{/*0.8 Parallel Binary Render | Window: ${WINDOW_SIZE} | Cores: ${CORES}}"
+    set title "Genome Hydropathy: ${ID}\n{/*0.8 Window: ${WINDOW_SIZE}"
     set view map
     set size square
 
