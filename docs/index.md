@@ -1,4 +1,4 @@
-# codonanalyzer
+<img src="docs/files/logo.png" width="300"/>
 
 !!! note
     `codonanalyzer` is a Nextflow DSL2 pipeline that runs codon usage, ORF detection, translation, and hydropathy analysis for each record in a DNA multi-FASTA file.

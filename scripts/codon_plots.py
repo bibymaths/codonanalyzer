@@ -11,7 +11,6 @@ Usage  : python codon_plots.py <codon_out.txt> <output_prefix>
 
 import sys
 import re
-import math
 from pathlib import Path
 from collections import defaultdict
 
@@ -20,7 +19,6 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import matplotlib.gridspec as gridspec
 from matplotlib.colors import Normalize
-from matplotlib.cm import ScalarMappable
 import numpy as np
 
 # ── CLI ───────────────────────────────────────────────────────────────────────
@@ -68,9 +66,13 @@ def parse_report(path: Path) -> dict:
 
     # ── block parser helper ───────────────────────────────────────────────────
     def _parse_kv_block(header_re, line_re):
-        """Extract key→value pairs from a labelled block."""
         result = {}
-        m = re.search(header_re + r"(.*?)(?=\n[A-Z3\-])", txt, re.S)
+        # Use a non-greedy match; stop at any line that looks like a new header
+        # (>=2 uppercase words or a line ending in ':' at col 0)
+        m = re.search(header_re + r"(.*?)(?=\n(?:[A-Z0-9][A-Z0-9\- ]{2,}:|\Z))", txt, re.S | re.M)
+        if not m:
+            # Fallback: grab everything after header until blank line
+            m = re.search(header_re + r"(.*?)(?:\n\n|\Z)", txt, re.S)
         if not m:
             return result
         for row in m.group(1).splitlines():
@@ -268,8 +270,9 @@ counts    = np.array([codon_data.get(cd, 0) for cd, _ in order_codons],
                      dtype=float).reshape(1, -1)
 
 cmap4 = plt.cm.YlOrRd
-im4   = ax4.imshow(counts, aspect="auto", cmap=cmap4,
-                   norm=Normalize(vmin=0, vmax=counts.max() or 1))
+vmax4 = float(counts.max())
+im4 = ax4.imshow(counts, aspect="auto", cmap=cmap4,
+                 norm=Normalize(vmin=0, vmax=vmax4 if vmax4 > 0 else 1.0))
 ax4.set_xticks(range(len(x_labels)))
 ax4.set_xticklabels(x_labels, fontsize=6.5, rotation=90)
 ax4.set_yticks([])
@@ -298,8 +301,9 @@ rscu_vals = np.array([rscu_data.get(cd, 0.0) for cd, _ in order_codons],
                      dtype=float).reshape(1, -1)
 
 cmap5 = plt.cm.RdYlGn
-im5   = ax5.imshow(rscu_vals, aspect="auto", cmap=cmap5,
-                   norm=Normalize(vmin=0, vmax=max(rscu_vals.max(), 2.0)))
+vmax5 = float(rscu_vals.max())
+im5 = ax5.imshow(rscu_vals, aspect="auto", cmap=cmap5,
+                 norm=Normalize(vmin=0, vmax=max(vmax5, 2.0) if vmax5 > 0 else 2.0))
 ax5.set_xticks(range(len(x_labels)))
 ax5.set_xticklabels(x_labels, fontsize=6.5, rotation=90)
 ax5.set_yticks([])
@@ -356,7 +360,7 @@ fig.suptitle(
 )
 
 for ext in ("png", "pdf"):
-    out_path = out_pfx.with_suffix(f".{ext}")
+    out_path = Path(str(out_pfx) + f".{ext}")
     fig.savefig(out_path, dpi=180, bbox_inches="tight",
                 facecolor=fig.get_facecolor())
     print(f"Saved: {out_path}")
