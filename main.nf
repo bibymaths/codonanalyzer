@@ -110,6 +110,39 @@ process PLOT_HYDROPATHY {
     """
 }
 
+process HEATMAP_PLOT {
+    tag { id }
+    publishDir "${params.outdir}/intermediate/heatmap", mode: 'copy'
+
+    input:
+    tuple val(id), path(hplot_txt)
+
+    output:
+    tuple val(id), path("*.png"), emit: heatmap_png
+
+    script:
+    """
+    bash ${projectDir}/scripts/heatmap.sh ${hplot_txt} ${id}
+    """
+}
+
+process CODON_PLOTS {
+    tag { id }
+    publishDir "${params.outdir}/intermediate/codon_plots", mode: 'copy'
+
+    input:
+    tuple val(id), path(metrics_txt)
+
+    output:
+    tuple val(id), path("${id}.codon_plots.png"), emit: png
+    tuple val(id), path("${id}.codon_plots.pdf"), emit: pdf
+
+    script:
+    """
+    python ${projectDir}/scripts/codon_plots.py ${metrics_txt} ${id}.codon_plots
+    """
+}
+
 process GATHER_RESULTS {
     tag 'gather'
     publishDir "${params.outdir}", mode: 'copy'
@@ -122,6 +155,9 @@ process GATHER_RESULTS {
     path hplot_files
     path hsummary_files
     path plot_pngs
+    path heatmap_pngs
+    path codon_plot_pngs
+    path codon_plot_pdfs
 
     output:
     path 'codonanalyzer_results/*', emit: all
@@ -168,7 +204,22 @@ process GATHER_RESULTS {
       cp "\${png_list[@]}" codonanalyzer_results/
     fi
 
-    for f in ${metrics_files} ${orf_tables} ${orf_fastas} ${translated_fastas} ${hplot_files} ${hsummary_files} ${plot_pngs}; do
+    heatmap_list=(${heatmap_pngs})
+    if [ \${#heatmap_list[@]} -gt 0 ]; then
+      cp "\${heatmap_list[@]}" codonanalyzer_results/
+    fi
+
+    codon_png_list=(${codon_plot_pngs})
+    if [ \${#codon_png_list[@]} -gt 0 ]; then
+      cp "\${codon_png_list[@]}" codonanalyzer_results/
+    fi
+
+    codon_pdf_list=(${codon_plot_pdfs})
+    if [ \${#codon_pdf_list[@]} -gt 0 ]; then
+      cp "\${codon_pdf_list[@]}" codonanalyzer_results/
+    fi
+
+    for f in ${metrics_files} ${orf_tables} ${orf_fastas} ${translated_fastas} ${hplot_files} ${hsummary_files} ${plot_pngs} ${heatmap_pngs} ${codon_plot_pngs} ${codon_plot_pdfs}; do
       [ -f "\$f" ] && cp "\$f" codonanalyzer_results/per_record/
     done
     """
@@ -200,6 +251,10 @@ workflow {
 
     PLOT_HYDROPATHY(HYDROPATHY_PROFILE.out.hplot)
 
+    HEATMAP_PLOT(HYDROPATHY_PROFILE.out.hplot)
+
+    CODON_PLOTS(CODON_ANALYSIS.out.metrics)
+
     GATHER_RESULTS(
         CODON_ANALYSIS.out.metrics
             .toSortedList { a, b -> a[0] <=> b[0] }
@@ -220,6 +275,15 @@ workflow {
             .toSortedList { a, b -> a[0] <=> b[0] }
             .map { entries -> entries.collect { id, file -> file } },
         PLOT_HYDROPATHY.out.png
+            .toSortedList { a, b -> a[0] <=> b[0] }
+            .map { entries -> entries.collect { id, file -> file } },
+        HEATMAP_PLOT.out.heatmap_png
+            .toSortedList { a, b -> a[0] <=> b[0] }
+            .map { entries -> entries.collect { id, files -> files }.flatten() },
+        CODON_PLOTS.out.png
+            .toSortedList { a, b -> a[0] <=> b[0] }
+            .map { entries -> entries.collect { id, file -> file } },
+        CODON_PLOTS.out.pdf
             .toSortedList { a, b -> a[0] <=> b[0] }
             .map { entries -> entries.collect { id, file -> file } }
     )

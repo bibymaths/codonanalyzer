@@ -56,6 +56,33 @@ flowchart LR
     B --> C[id.hplot.png]
 ```
 
+## HEATMAP_PLOT (`scripts/heatmap.sh`)
+
+Generates a 2-D genome hydropathy heatmap by binning the per-position hydropathy values from `HYDROPATHY_PROFILE` into a symmetric matrix and rendering it with gnuplot.
+
+Input: `id.hplot.txt` produced by `HYDROPATHY_PROFILE`.
+Output: one PNG file named `<prefix>_<id>.png` (a diverging Blue–White–Red heatmap of average hydropathy across genomic windows).
+
+```mermaid
+flowchart LR
+    A[id.hplot.txt] --> B[HEATMAP_PLOT]
+    B --> C[id_seqname.png]
+```
+
+## CODON_PLOTS (`scripts/codon_plots.py`)
+
+Produces a multi-panel figure visualising codon usage metrics from `CODON_ANALYSIS`: nucleotide composition pie chart, scalar sequence metrics, ORF statistics, codon-count heatmap, RSCU heatmap, amino-acid composition bar chart, and sliding-window GC%.
+
+Input: `id.metrics.txt` produced by `CODON_ANALYSIS`.
+Output: `id.codon_plots.png` and `id.codon_plots.pdf`.
+
+```mermaid
+flowchart LR
+    A[id.metrics.txt] --> B[CODON_PLOTS]
+    B --> C[id.codon_plots.png]
+    B --> D[id.codon_plots.pdf]
+```
+
 ## GATHER_RESULTS
 
 !!! danger
